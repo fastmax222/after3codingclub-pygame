@@ -56,7 +56,7 @@ while running:
     # Red block movement
     red_block_x -= red_block_speed
     if red_block_x < -red_block_size:
-        red_block_x = WIDTH
+        red_block_x = WIDTH  # Reset to the right edge
 
     # Jumping
     if jumping:
