@@ -17,11 +17,19 @@ player_size = 50
 player_x = WIDTH // 2 - player_size // 2
 player_y = HEIGHT - 2 * player_size
 player_speed = 5
+jumping = False
+jump_count = 10
 
 # Initialize the screen
 screen = pygame.display.set_mode((WIDTH, HEIGHT))
 pygame.display.set_caption("Simple Platformer")
 clock = pygame.time.Clock()
+
+def jump():
+    global player_y, jumping, jump_count
+    if not jumping:
+        jumping = True
+        jump_count = 10  # You can adjust the jump height by changing the jump_count
 
 # Game loop
 running = True
@@ -29,6 +37,9 @@ while running:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             running = False
+        elif event.type == pygame.KEYDOWN:
+            if event.key == pygame.K_SPACE:
+                jump()
 
     # Player movement
     keys = pygame.key.get_pressed()
@@ -37,8 +48,19 @@ while running:
     if keys[pygame.K_RIGHT] and player_x < WIDTH - player_size:
         player_x += player_speed
 
+    # Jumping
+    if jumping:
+        if jump_count >= -10:
+            neg = 1
+            if jump_count < 0:
+                neg = -1
+            player_y -= (jump_count ** 2) * 0.5 * neg
+            jump_count -= 1
+        else:
+            jumping = False
+
     # Gravity simulation (simple - player always falls)
-    if player_y < HEIGHT - player_size:
+    if player_y < HEIGHT - player_size and not jumping:
         player_y += 5  # You can adjust the gravity value
 
     # Draw background
