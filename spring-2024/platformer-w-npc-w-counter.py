@@ -17,7 +17,7 @@ player_x = WIDTH // 2 - player_size // 2
 player_y = HEIGHT - 2 * player_size
 player_speed = 5
 jumping = False
-jump_count = 10
+jump_count = 20  # Increased jump height
 
 # Red block properties
 red_block_size = 50
@@ -38,7 +38,7 @@ def jump():
     global player_y, jumping, jump_count
     if not jumping:
         jumping = True
-        jump_count = 10  # You can adjust the jump height by changing the jump_count
+        jump_count = 20  # Increased jump height
 
 # Game loop
 running = True
@@ -72,7 +72,7 @@ while running:
 
     # Jumping
     if jumping:
-        if jump_count >= -10:
+        if jump_count >= -20:
             neg = 1
             if jump_count < 0:
                 neg = -1
