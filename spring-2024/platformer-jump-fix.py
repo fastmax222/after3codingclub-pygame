@@ -1,5 +1,6 @@
 import pygame
 import sys
+import math
 
 # Initialize Pygame
 pygame.init()
@@ -17,7 +18,8 @@ player_x = WIDTH // 2 - player_size // 2
 player_y = HEIGHT - 2 * player_size
 player_speed = 5
 jumping = False
-jump_count = 20  # Increased jump height
+jump_time = 0
+jump_duration = 30  # Adjust the jump duration for a lower jump height
 
 # Red block properties
 red_block_size = 50
@@ -35,10 +37,10 @@ font = pygame.font.Font(None, 36)  # Set the font and size
 clock = pygame.time.Clock()
 
 def jump():
-    global player_y, jumping, jump_count
+    global player_y, jumping, jump_time
     if not jumping:
         jumping = True
-        jump_count = 20  # Increased jump height
+        jump_time = 0
 
 # Game loop
 running = True
@@ -70,14 +72,11 @@ while running:
         contact_counter += 1
         print("Contact Counter:", contact_counter)
 
-    # Jumping
+    # Jumping with a sine wave
     if jumping:
-        if jump_count >= -20:
-            neg = 1
-            if jump_count < 0:
-                neg = -1
-            player_y -= (jump_count ** 2) * 0.5 * neg
-            jump_count -= 1
+        if jump_time <= jump_duration:
+            player_y -= math.sin((jump_time / jump_duration) * math.pi) * 15  # Adjust the amplitude for a lower jump height
+            jump_time += 1
         else:
             jumping = False
 
