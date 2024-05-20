@@ -18,7 +18,7 @@ jumping = False
 jump_time = 0
 jump_duration = 27.5  # Adjust the jump duration for a lower jump height
 
-# Red block properties
+# Red block 2 properties
 red_block_size = 50
 red_block_x = WIDTH
 red_block_y = HEIGHT - red_block_size*4
