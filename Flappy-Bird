@@ -4,11 +4,13 @@ import pygame, sys, math, random, time
 pygame.init()
 
 # Constants
-WIDTH, HEIGHT = 800, 600
+WIDTH, HEIGHT = 800, 550
 FPS = 75
 WHITE = (255, 255, 255)
-PINK = (238, 130, 238)
+GREEN = (0, 255, 0)
 RED = (255, 0, 0)
+Points =      0
+high = 0
 
 # Player properties
 player_size = 50
@@ -18,22 +20,23 @@ jumping = False
 jump_time = 0
 jump_duration = 27.5  # Adjust the jump duration for a lower jump height
 
-# Red block 2 properties
+# Red block properties
 red_block_size = 50
 red_block_x = WIDTH
-red_block_y = HEIGHT - red_block_size*4
+red_block_y = HEIGHT - red_block_size*2
 red_block_speed = 5
 
 # Red block properties
 red_block_2_size = red_block_size
 red_block_2_x = WIDTH
-red_block_2_y = random. randint(-10, 10)
+red_block_2_y = random. randint(-0, 10)
 red_block_2_speed = red_block_speed
 
 # Initialize the screen
 screen = pygame.display.set_mode((WIDTH, HEIGHT))
 pygame.display.set_caption("Simple Platformer")
 clock = pygame.time.Clock()
+font = pygame.font.Font(None, 36)
 
 def jump():
     global player_y, jumping, jump_time
@@ -50,12 +53,14 @@ while running:
         elif event.type == pygame.KEYDOWN:
             if event.key == pygame.K_SPACE:
                 jump()
+        elif event.type == pygame.MOUSEBUTTONDOWN:
+                jump()
     # Red block movement
     red_block_x -= red_block_speed
     red_block_2_x -= red_block_speed
     if red_block_x < -red_block_size:
         red_block_x = WIDTH  # Reset to the right edge
-        red_block_y = HEIGHT - red_block_size*random. randint(3,4)
+        red_block_y = HEIGHT - red_block_size*random. randint(2,4)
     if red_block_2_x < -red_block_2_size:
         red_block_2_x = WIDTH
         red_block_2_y = random. randint(-50,0)
@@ -74,12 +79,15 @@ while running:
         
         # Red block properties
         red_block_x = WIDTH
-        red_block_y = HEIGHT - red_block_size*4
+        red_block_y = HEIGHT - red_block_size*random. randint(1,3)
 
         # Red block properties
         red_block_2_x = WIDTH
-        red_block_2_y = random. randint(-10, 10)
-
+        red_block_2_y = random. randint(-50, 0)
+        
+        # Other stuff
+        Points = 0
+        
     # Jumping with a sine wave
     if jumping:
         if jump_time <= jump_duration:
@@ -94,13 +102,26 @@ while running:
 
     # Draw background
     screen.fill(WHITE)
+    
+    # Points
+    if red_block_x == player_x - player_size:
+      Points += 1
+    if Points > high:
+      high = Points
+    pygame.display.set_caption("points:", str(Points))
+    text = font.render(f"Points: {Points}", True, (0, 0, 0))
+    screen.blit(text, (10, 10))
+    pygame.display.set_caption("Highscore:", str(high))
+    text = font.render(f"Highscore: {high}", True, (0, 0, 0))
+    screen.blit(text, (10, 30))
 
+    
     # Draw red blocks
     pygame.draw.rect(screen, RED, (red_block_x, red_block_y, red_block_size, red_block_size*4))
     pygame.draw.rect(screen, RED, (red_block_2_x, red_block_2_y, red_block_2_size, red_block_2_size*4))
 
     # Draw player
-    pygame.draw.rect(screen, PINK, (player_x, player_y, player_size, player_size))
+    pygame.draw.rect(screen, GREEN, (player_x, player_y, player_size, player_size))
 
     # Update the display
     pygame.display.flip()
