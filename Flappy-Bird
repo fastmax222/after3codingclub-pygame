@@ -1,0 +1,100 @@
+import pygame, sys, math, random
+
+# Initialize Pygame
+pygame.init()
+
+# Constants
+WIDTH, HEIGHT = 800, 600
+FPS = 75
+WHITE = (255, 255, 255)
+YELLOW = (255, 165, 0)
+RED = (255, 0, 0)
+
+# Player properties
+player_size = 50
+player_x = WIDTH/2
+player_y = HEIGHT/2
+jumping = False
+jump_time = 0
+jump_duration = 27.5  # Adjust the jump duration for a lower jump height
+
+# Red block properties
+red_block_size = 50
+red_block_x = WIDTH
+red_block_y = HEIGHT - red_block_size*4
+red_block_speed = 5
+
+# Red block properties
+red_block_2_size = red_block_size
+red_block_2_x = WIDTH
+red_block_2_y = random. randint(-10, 10)
+red_block_2_speed = red_block_speed
+
+# Initialize the screen
+screen = pygame.display.set_mode((WIDTH, HEIGHT))
+pygame.display.set_caption("Simple Platformer")
+clock = pygame.time.Clock()
+
+def jump():
+    global player_y, jumping, jump_time
+    if not jumping:
+        jumping = True
+        jump_time = 0
+
+# Game loop
+running = True
+while running:
+    for event in pygame.event.get():
+        if event.type == pygame.QUIT:
+            running = False
+        elif event.type == pygame.KEYDOWN:
+            if event.key == pygame.K_SPACE:
+                jump()
+                
+    # Red block movement
+    red_block_x -= red_block_speed
+    red_block_2_x -= red_block_speed
+    if red_block_x < -red_block_size:
+        red_block_x = WIDTH  # Reset to the right edge
+        red_block_y = HEIGHT - red_block_size*random. randint(3,4)
+    if red_block_2_x < -red_block_2_size:
+        red_block_2_x = WIDTH
+        red_block_2_y = random. randint(-50,0)
+
+    # Collision detection
+    player_rect = pygame.Rect(player_x, player_y, player_size, player_size)
+    red_block_rect = pygame.Rect(red_block_x, red_block_y, red_block_size, red_block_size*4)
+    red_block_2_rect = pygame.Rect(red_block_2_x, red_block_2_y, red_block_2_size, red_block_2_size*4)
+
+    if player_rect.colliderect(red_block_rect) or player_rect.colliderect(red_block_2_rect):
+        pygame.quit()
+        sys.exit()
+        
+
+    # Jumping with a sine wave
+    if jumping:
+        if jump_time <= jump_duration:
+            player_y -= math.sin((jump_time / jump_duration) * math.pi) * 7.5 # Adjust the amplitude for a lower jump height
+            jump_time += 1
+        else:
+            jumping = False
+
+    # Gravity simulation (simple - player always falls)
+    if player_y < HEIGHT - player_size and not jumping:
+        player_y += 5  # You can adjust the gravity value
+
+    # Draw background
+    screen.fill(WHITE)
+
+    # Draw red blocks
+    pygame.draw.rect(screen, RED, (red_block_x, red_block_y, red_block_size, red_block_size*4))
+    pygame.draw.rect(screen, RED, (red_block_2_x, red_block_2_y, red_block_2_size, red_block_2_size*4))
+
+    # Draw player
+    pygame.draw.rect(screen, YELLOW, (player_x, player_y, player_size, player_size))
+
+    # Update the display
+    pygame.display.flip()
+
+    # Cap the frame rate
+    clock.tick(FPS)
