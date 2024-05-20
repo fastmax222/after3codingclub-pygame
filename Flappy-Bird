@@ -1,4 +1,4 @@
-import pygame, sys, math, random
+import pygame, sys, math, random, time
 
 # Initialize Pygame
 pygame.init()
@@ -7,7 +7,7 @@ pygame.init()
 WIDTH, HEIGHT = 800, 600
 FPS = 75
 WHITE = (255, 255, 255)
-YELLOW = (255, 165, 0)
+BLUE = (238, 130, 238)
 RED = (255, 0, 0)
 
 # Player properties
@@ -50,7 +50,6 @@ while running:
         elif event.type == pygame.KEYDOWN:
             if event.key == pygame.K_SPACE:
                 jump()
-                
     # Red block movement
     red_block_x -= red_block_speed
     red_block_2_x -= red_block_speed
@@ -67,9 +66,19 @@ while running:
     red_block_2_rect = pygame.Rect(red_block_2_x, red_block_2_y, red_block_2_size, red_block_2_size*4)
 
     if player_rect.colliderect(red_block_rect) or player_rect.colliderect(red_block_2_rect):
-        pygame.quit()
-        sys.exit()
+        time. sleep(0.05)
+        # Player properties
+        player_size = 50
+        player_x = WIDTH/2
+        player_y = HEIGHT/2
         
+        # Red block properties
+        red_block_x = WIDTH
+        red_block_y = HEIGHT - red_block_size*4
+
+        # Red block properties
+        red_block_2_x = WIDTH
+        red_block_2_y = random. randint(-10, 10)
 
     # Jumping with a sine wave
     if jumping:
@@ -91,7 +100,7 @@ while running:
     pygame.draw.rect(screen, RED, (red_block_2_x, red_block_2_y, red_block_2_size, red_block_2_size*4))
 
     # Draw player
-    pygame.draw.rect(screen, YELLOW, (player_x, player_y, player_size, player_size))
+    pygame.draw.rect(screen, BLUE, (player_x, player_y, player_size, player_size))
 
     # Update the display
     pygame.display.flip()
