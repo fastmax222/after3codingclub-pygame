@@ -7,7 +7,7 @@ pygame.init()
 WIDTH, HEIGHT = 800, 600
 FPS = 75
 WHITE = (255, 255, 255)
-BLUE = (238, 130, 238)
+PINK = (238, 130, 238)
 RED = (255, 0, 0)
 
 # Player properties
@@ -100,7 +100,7 @@ while running:
     pygame.draw.rect(screen, RED, (red_block_2_x, red_block_2_y, red_block_2_size, red_block_2_size*4))
 
     # Draw player
-    pygame.draw.rect(screen, BLUE, (player_x, player_y, player_size, player_size))
+    pygame.draw.rect(screen, PINK, (player_x, player_y, player_size, player_size))
 
     # Update the display
     pygame.display.flip()
