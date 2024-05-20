@@ -26,10 +26,10 @@ red_block_x = WIDTH
 red_block_y = HEIGHT - red_block_size*2
 red_block_speed = 5
 
-# Red block properties
+# Red block 2 properties
 red_block_2_size = red_block_size
 red_block_2_x = WIDTH
-red_block_2_y = random. randint(-0, 10)
+red_block_2_y = random. randint(-200, 0)
 red_block_2_speed = red_block_speed
 
 # Initialize the screen
@@ -70,7 +70,7 @@ while running:
     red_block_rect = pygame.Rect(red_block_x, red_block_y, red_block_size, red_block_size*4)
     red_block_2_rect = pygame.Rect(red_block_2_x, red_block_2_y, red_block_2_size, red_block_2_size*4)
 
-    if player_rect.colliderect(red_block_rect) or player_rect.colliderect(red_block_2_rect):
+    if player_rect.colliderect(red_block_rect) or player_rect.colliderect(red_block_2_rect) or player_y > 500 or player_y < 0:
         time. sleep(0.05)
         # Player properties
         player_size = 50
@@ -83,7 +83,7 @@ while running:
 
         # Red block properties
         red_block_2_x = WIDTH
-        red_block_2_y = random. randint(-50, 0)
+        red_block_2_y = random. randint(-200, 0)
         
         # Other stuff
         Points = 0
