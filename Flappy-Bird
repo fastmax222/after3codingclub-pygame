@@ -6,10 +6,10 @@ pygame.init()
 # Constants
 WIDTH, HEIGHT = 800, 550
 FPS = 75
-WHITE = (255, 255, 255)
+BLUE = (203, 246, 255)
 GREEN = (0, 255, 0)
 RED = (255, 0, 0)
-Points =      0
+Points = 0
 high = 0
 
 # Player properties
@@ -101,7 +101,7 @@ while running:
         player_y += 5  # You can adjust the gravity value
 
     # Draw background
-    screen.fill(WHITE)
+    screen.fill(BLUE)
     
     # Points
     if red_block_x == player_x - player_size:
@@ -110,10 +110,10 @@ while running:
       high = Points
     pygame.display.set_caption("points:", str(Points))
     text = font.render(f"Points: {Points}", True, (0, 0, 0))
-    screen.blit(text, (10, 10))
+    screen.blit(text, (50, 10))
     pygame.display.set_caption("Highscore:", str(high))
     text = font.render(f"Highscore: {high}", True, (0, 0, 0))
-    screen.blit(text, (10, 30))
+    screen.blit(text, (50, 30))
 
     
     # Draw red blocks
