@@ -1,0 +1,167 @@
+import pygame, sys, math, random, time
+
+# Initialize Pygame
+pygame.init()
+
+# Constants
+WIDTH, HEIGHT = 800, 550
+FPS = 75
+WHITE = (255, 255, 255)
+GREEN = (0, 255, 0)
+RED = (255, 0, 0)
+Points =      0
+high = 0
+angle = 0
+margin_close = 0
+
+# Initialize the screen
+screen = pygame.display.set_mode((WIDTH, HEIGHT))
+pygame.display.set_caption("Simple Platformer")
+clock = pygame.time.Clock()
+font = pygame.font.Font(None, 36)
+
+# more Constants
+bg = pygame.image.load("backround.png").convert()
+bg2 = pygame.image.load("backround.png").convert()
+bgx = WIDTH/2
+bg2x = WIDTH/2 + bg2.get_width()
+bgc = 0
+bg2c = 0-bg2.get_width()
+
+# Player properties
+player_width = 50
+player_height = 50
+player_x = WIDTH/2
+player_y = HEIGHT/2
+jumping = False
+jump_time = 0
+jump_duration = 27.5  # Adjust the jump duration for a lower jump height
+bird = pygame.image.load("flappy bird.png").convert_alpha()
+
+# Red block properties
+red_block_size = 50
+red_block_x = WIDTH
+red_block_y = HEIGHT - red_block_size*2
+red_block_speed = 5
+pole = pygame.image.load("pole.png").convert_alpha()
+
+# Red block 2 properties
+red_block_2_size = red_block_size
+red_block_2_x = WIDTH
+red_block_2_y = random. randint(-200, 0)
+red_block_2_speed = red_block_speed
+pole2 = pygame.image.load("pole2.png").convert_alpha()
+
+def jump():
+    global player_y, jumping, jump_time
+    if not jumping:
+        jumping = True
+        jump_time = 0
+
+# Game loop
+running = True
+while running:
+    for event in pygame.event.get():
+        if event.type == pygame.QUIT:
+            running = False
+        elif event.type == pygame.KEYDOWN:
+            if event.key == pygame.K_SPACE:
+                jump()
+        elif event.type == pygame.MOUSEBUTTONDOWN:
+                jump()
+    # Red block movement
+    red_block_x -= red_block_speed
+    red_block_2_x -= red_block_speed
+    if red_block_x < -red_block_size:
+        red_block_x = WIDTH  # Reset to the right edge
+        red_block_y = HEIGHT - red_block_size*random. randint(2,4)
+    if red_block_2_x < -red_block_2_size:
+        red_block_2_x = WIDTH
+        red_block_2_y = random. randint(-40,0)
+    # bg movement
+    bgx -= red_block_speed / 2
+    bg2x -= red_block_speed / 2
+    bgc += red_block_speed / 2
+    bg2c += red_block_speed / 2
+    if bgc > bg.get_width():
+        margin_close += 10
+        bgx = WIDTH/2 + bg.get_width() - margin_close # reset bg
+        bgc = 0 - bg.get_width() # reset bgc
+    if bg2c > bg.get_width():
+        margin_close += 10
+        bg2x = WIDTH/2 + bg.get_width() - margin_close # reset bg2
+        bg2c = 0 - bg.get_width() # reset bg2c
+    
+    # Collision detection
+    player_rect = pygame.Rect(player_x, player_y, player_width, player_height)
+    red_block_rect = pygame.Rect(red_block_x, red_block_y, red_block_size, red_block_size*4)
+    red_block_2_rect = pygame.Rect(red_block_2_x, red_block_2_y, red_block_2_size, red_block_2_size*4)
+    if player_rect.colliderect(red_block_rect) or player_rect.colliderect(red_block_2_rect) or player_y > 500 or player_y < 0:
+        time.sleep(1)
+
+        # Player properties
+        player_x = WIDTH/2
+        player_y = HEIGHT/2
+        
+        # Red block properties
+        red_block_x = WIDTH
+        red_block_y = HEIGHT - red_block_size*random. randint(1,3)
+
+        # Red block properties
+        red_block_2_x = WIDTH
+        red_block_2_y = random. randint(-200, 0)
+        
+        # Other stuff
+        Points = 0
+        red_block_speed = 5
+        
+        
+    # Jumping with a sine wave
+    if jumping:
+        if jump_time <= jump_duration:
+            player_y -= math.sin((jump_time / jump_duration) * math.pi) * 7.5 # Adjust the amplitude for a lower jump height
+            jump_time += 1
+        else:
+            jumping = False
+
+    # Gravity simulation (simple - player always falls)
+    if player_y < HEIGHT - player_height and not jumping:
+        player_y += 5  # You can adjust the gravity value
+
+    # Draw background
+    screen.fill(WHITE)
+
+    # draw bg
+    screen.blit(bg, (bgx - int(bg.get_width() / 2), HEIGHT/2 - int(bg.get_height() / 2)))
+    screen.blit(bg2, (bg2x - int(bg2.get_width() / 2), HEIGHT/2 - int(bg2.get_height() / 2)))
+
+    # Draw red blocks
+    pygame.draw.rect(screen, RED, (red_block_x, red_block_y, red_block_size, red_block_size*4))
+    pygame.draw.rect(screen, RED, (red_block_2_x, red_block_2_y, red_block_2_size, red_block_2_size*4))
+    screen.blit(pole, (red_block_x - int(pole.get_width() / 2), red_block_y))
+    screen.blit(pole2, (red_block_2_x - int(pole2.get_width() / 2), red_block_2_y - int(pole2.get_height() * 0.75) + 20))
+
+
+    # Draw player
+    pygame.draw.rect(screen, GREEN, (player_x-36, player_y-20, player_width, player_height))
+    screen.blit(bird,(player_x - int(bird.get_width() / 2), player_y - int(bird.get_height() / 2)))
+    
+    # Points
+    if red_block_x == player_x:
+      Points += 1
+    if Points > high:
+      high = Points
+    if Points == 5:
+        red_block_speed = 10
+    pygame.display.set_caption("points:", str(Points))
+    text = font.render(f"Points: {Points}", True, (0, 0, 0))
+    screen.blit(text, (10, 10))
+    pygame.display.set_caption("Highscore:", str(high))
+    text = font.render(f"Highscore: {high}", True, (0, 0, 0))
+    screen.blit(text, (10, 30))
+
+    # Update the display
+    pygame.display.flip()
+
+    # Cap the frame rate
+    clock.tick(FPS)
